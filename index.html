@@ -205,21 +205,21 @@
             box-shadow: 0 10px 40px rgba(139, 92, 246, 0.2);
         }
         .flip-card-front h3, .flip-card-back h3 { color: var(--accent); margin-bottom: 15px; font-size: 1.8rem; }
-        .flip-card-front p, .flip-card-back p { font-size: 1.2rem; }
+        .flip-card-front p, .flip-card-back p { font-size: 1.2rem; color: var(--text); }
         .click-hint { font-size: 0.9rem; color: var(--accent); position: absolute; bottom: 20px; right: 25px; opacity: 0.7; }
 
         /* --- БЛОК 3D ВИЗУАЛИЗАЦИИ И ИНФО --- */
         .supra-section {
             max-width: 1000px; width: 100%;
             margin: 60px auto 0 auto;
-            display: flex; flex-direction: column; align-items: center; gap: 30px;
+            display: flex; flex-direction: column; align-items: center; 
+            gap: 80px; /* Увеличено с 30px для большего пространства между 3D и текстом */
         }
         
         .future-3d-large {
-            width: 100%; height: 500px; /* Высота для 3D холста */
+            width: 100%; height: 600px; /* Увеличено для свободного вращения машины */
             position: relative;
             display: flex; align-items: center; justify-content: center;
-            /* Убрали фон и бордеры, чтобы машина висела на матрице */
             background: transparent;
             border: none;
             box-shadow: none;
@@ -238,8 +238,8 @@
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
         }
         .supra-info h3 { font-size: 2.2rem; color: var(--accent); margin-bottom: 15px; }
-        .supra-info p { font-size: 1.2rem; color: var(--text-muted); line-height: 1.6; }
-        .supra-info strong { color: var(--text); }
+        .supra-info p { font-size: 1.2rem; color: var(--text); line-height: 1.6; } /* Цвет текста заменен на чистый белый */
+        .supra-info strong { color: var(--accent); }
 
         /* --- СОЦСЕТИ --- */
         .socials-container { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; }
@@ -256,7 +256,7 @@
             .typewriter { animation: none; border: none; } 
             .interests__cards { grid-template-columns: 1fr; }
             .supra-info { padding: 25px 20px; }
-            .future-3d-large { height: 350px; }
+            .future-3d-large { height: 450px; }
         }
     </style>
 </head>
