@@ -658,8 +658,7 @@
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(4, 2, 5);
-
+        
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -669,36 +668,58 @@
         controls.autoRotate = true;
         controls.autoRotateSpeed = 1.5;
 
-        // Настраиваем свет для модели
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+        // --- УЛУЧШЕННЫЙ СВЕТ ---
+        // Машины часто темные, поэтому светим ярко со всех сторон
+        const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
         scene.add(ambientLight);
         
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        directionalLight.position.set(5, 10, 7.5);
-        scene.add(directionalLight);
+        const dirLightFront = new THREE.DirectionalLight(0xffffff, 3.0);
+        dirLightFront.position.set(10, 10, 10);
+        scene.add(dirLightFront);
+
+        const dirLightBack = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirLightBack.position.set(-10, 10, -10);
+        scene.add(dirLightBack);
 
         const loader = new GLTFLoader();
         
-        // Загрузка модели по указанному тобой имени
         loader.load(
             '1994_toyota_supra_mk_iv_bomex_fast__furious.glb', 
             function (gltf) {
                 const model = gltf.scene;
-                
-                // Масштаб и позиция
-                model.scale.set(1, 1, 1); 
-                model.position.y = -1; 
-                
                 scene.add(model);
 
-                // Прячем текст загрузки и показываем саму модель
+                // --- УМНОЕ МАСШТАБИРОВАНИЕ И ЦЕНТРИРОВАНИЕ ---
+                // 1. Создаем коробку вокруг модели, чтобы узнать её реальные размеры
+                const box = new THREE.Box3().setFromObject(model);
+                const size = box.getSize(new THREE.Vector3());
+                const center = box.getCenter(new THREE.Vector3());
+
+                // 2. Находим самую длинную сторону модели
+                const maxDim = Math.max(size.x, size.y, size.z);
+                
+                // 3. Подгоняем масштаб так, чтобы машина занимала примерно 6 единиц пространства (идеально для камеры)
+                const scale = 6 / maxDim;
+                model.scale.set(scale, scale, scale);
+
+                // 4. Заново вычисляем центр (после масштабирования) и сдвигаем машину ровно в (0,0,0)
+                box.setFromObject(model);
+                box.getCenter(center);
+                model.position.sub(center);
+
+                // Прячем текст загрузки и показываем холст с машиной
                 placeholder.style.display = 'none';
                 container.appendChild(renderer.domElement);
+
+                // 5. Ставим камеру на идеальное расстояние сбоку-сверху
+                camera.position.set(5, 3, 6);
+                controls.target.set(0, 0, 0); // Камера смотрит четко в центр машины
+                controls.update();
             },
             undefined, 
             function (error) {
                 console.error('Ошибка загрузки модели:', error);
-                placeholder.innerHTML = `<p style="color: red;">Ошибка загрузки 3D модели. Проверьте консоль.</p>`;
+                placeholder.innerHTML = `<p style="color: red;">Ошибка загрузки 3D модели.</p>`;
             }
         );
 
