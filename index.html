@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфолио | Evil_bastard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #050505; 
+            --accent: #8b5cf6;
+            --matrix-color: #8b5cf6;
+            --text: #ffffff;
+            --text-muted: #a0a0a0;
+            --glass: rgba(20, 20, 20, 0.6);
+            --glass-border: rgba(139, 92, 246, 0.2);
+            --nav-bg: rgba(5, 5, 5, 0.9);
+        }
+
+        /* РЕЖИМ RAMPAGE */
+        body.rampage-mode {
+            --accent: #ff003c;
+            --matrix-color: #ff003c;
+            --glass-border: rgba(255, 0, 60, 0.3);
+            animation: shake 0.4s infinite;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            25% { transform: translate(-1px, -2px) rotate(-1deg); }
+            50% { transform: translate(-3px, 0px) rotate(1deg); }
+            75% { transform: translate(2px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -1px) rotate(-1deg); }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* ЗАСТАВКА (ОТПЕЧАТОК ПАЛЬЦА И НИК) */
+        #preloader {
+            position: fixed; inset: 0; background: #000; z-index: 99999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+        .loaded #preloader { opacity: 0; visibility: hidden; pointer-events: none; }
+        
+        .loader-content { display: flex; flex-direction: column; align-items: center; gap: 25px; }
+        #fingerprint-icon { 
+            font-size: 6rem; color: var(--accent); opacity: 0.5; 
+            animation: pulseScan 1.2s infinite alternate; transition: color 0.5s;
+        }
+        @keyframes pulseScan {
+            0% { text-shadow: 0 0 10px var(--accent); opacity: 0.5; }
+            100% { text-shadow: 0 0 40px var(--accent), 0 0 80px var(--accent); opacity: 1; transform: scale(1.05); }
+        }
+        #decrypt-text { 
+            font-family: monospace; font-size: 2.5rem; color: #fff; 
+            letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,255,255,0.5); 
+        }
+        .progress-bar { 
+            width: 300px; height: 4px; background: #222; 
+            border-radius: 2px; overflow: hidden; position: relative; 
+        }
+        .progress-fill { 
+            width: 0%; height: 100%; background: var(--accent); 
+            animation: fillUp 2s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+            box-shadow: 0 0 15px var(--accent); transition: background 0.5s;
+        }
+        @keyframes fillUp { 0% { width: 0%; } 60% { width: 75%; } 100% { width: 100%; } }
+
+        /* ФЕЙКОВЫЙ СКАН */
+        #scan-popup {
+            position: fixed; bottom: 20px; left: 20px; background: rgba(0, 10, 0, 0.9);
+            border: 1px solid var(--accent); color: var(--accent); padding: 15px 20px;
+            font-family: monospace; z-index: 9998; opacity: 0; transition: opacity 0.5s;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); border-radius: 8px; font-size: 1.1rem; pointer-events: none;
+        }
+
+        #matrixCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; opacity: 0.15; }
+
+        nav {
+            position: fixed; top: 0; width: 100%; background: var(--nav-bg); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border); z-index: 1000; padding: 15px 0;
+            transform: translateY(-100%); transition: transform 0.5s ease-out;
+        }
+        .loaded nav { transform: translateY(0); }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: center; gap: 40px; }
+        
+        /* --- Анимация кнопок навигации (Терминальные скобки) --- */
+        .nav-container a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.2rem;
+            position: relative;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container a::before, 
+        .nav-container a::after {
+            position: absolute;
+            opacity: 0;
+            color: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container a::before { content: '['; left: -10px; }
+        .nav-container a::after { content: ']'; right: -10px; }
+
+        .nav-container a:hover {
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-container a:hover::before { opacity: 1; left: -5px; }
+        .nav-container a:hover::after { opacity: 1; right: -5px; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+        
+        section { padding: 100px 0 40px 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        
+        #socials { min-height: auto; padding: 60px 0 100px 0; }
+
+        /* ГЛАВНЫЙ ЭКРАН */
+        .hero { display: grid; grid-template-columns: 1.3fr 1fr; align-items: center; gap: 40px; }
+        .hero-text h1 { font-size: 5rem; margin-bottom: 15px; line-height: 1.1; letter-spacing: -1px; }
+        
+        .glitch { position: relative; color: var(--accent); display: inline-block; }
+        .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); }
+        .glitch::before { left: 3px; text-shadow: -2px 0 red; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim-2 3s infinite linear alternate-reverse; }
+        .glitch::after { left: -3px; text-shadow: -2px 0 #0ff; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(10px, 9999px, 31px, 0); } 10% { clip: rect(10px, 9999px, 80px, 0); } 100% { clip: rect(0, 9999px, 0, 0); } }
+        @keyframes glitch-anim-2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 10% { clip: rect(20px, 9999px, 30px, 0); } 100% { clip: rect(0, 9999px, 0, 0); } }
+
+        .typewriter {
+            display: inline-block; overflow: hidden; white-space: nowrap; border-right: 3px solid var(--accent); font-size: 2.2rem;
+            animation: typing 3s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { 50% { border-color: transparent; } }
+        
+        .hero-text p { font-size: 1.6rem; color: var(--text-muted); margin-bottom: 30px; margin-top: 20px; }
+        .hero-image { display: flex; justify-content: flex-end; align-items: center; width: 100%; }
+        .hero-image img { width: 100%; max-width: 500px; object-fit: contain; filter: drop-shadow(0 0 50px var(--accent)); animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); filter: drop-shadow(0 0 70px var(--accent)); } }
+
+        /* БЕГУЩАЯ СТРОКА */
+        .ticker-wrap {
+            width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
+            background: rgba(10, 10, 10, 0.8); border-top: 1px solid var(--accent); border-bottom: 1px solid var(--accent);
+            padding: 15px 0; overflow: hidden; margin-top: 20px;
+        }
+        .ticker-move { display: flex; width: 200%; animation: ticker 20s linear infinite; }
+        .ticker-item { flex: 1; text-align: center; font-size: 1.3rem; font-family: monospace; color: var(--accent); font-weight: bold; }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* ТЕРМИНАЛ И NETWORK GRAPH */
+        .section-title { text-align: center; font-size: 3rem; margin-bottom: 50px; }
+        .terminal {
+            background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(5px); border-radius: 10px; border: 1px solid #333;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); max-width: 900px; margin: 0 auto;
+        }
+        .terminal-header { background: #222; padding: 12px; display: flex; gap: 8px; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; } .dot.red { background: #ff5f56; } .dot.yellow { background: #ffbd2e; } .dot.green { background: #27c93f; }
+        .terminal-body { padding: 25px; font-family: monospace; font-size: 1.3rem; color: #27c93f; max-height: 300px; overflow-y: auto; }
+        .terminal-body::-webkit-scrollbar { width: 8px; } .terminal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .terminal-body p { margin-bottom: 10px; } .terminal-body span.prompt { color: var(--accent); } .terminal-body span.text { color: var(--text); }
+        .term-input-line { display: flex; gap: 10px; margin-top: 10px; }
+        #term-input { background: transparent; border: none; color: var(--text); font-family: inherit; font-size: inherit; flex: 1; outline: none; }
+
+        /* ИНТЕРАКТИВНАЯ СЕТЬ */
+        #networkCanvas {
+            width: 100%; height: 450px; 
+            max-width: 900px; margin: 40px auto 0 auto; display: block;
+            background: rgba(10, 10, 10, 0.5); border: 1px solid var(--glass-border); 
+            border-radius: 15px; box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); cursor: crosshair;
+        }
+
+        /* --- КАРТОЧКИ ИНТЕРЕСОВ --- */
+        #interests { display: flex; flex-direction: column; align-items: center; gap: 40px; }
+        
+        .interests__cards { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; 
+            width: 100%; max-width: 1400px; margin: 0 auto;
+        }
+        
+        .flip-card { background-color: transparent; min-height: 300px; perspective: 1000px; cursor: pointer; }
+        .flip-card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            background: var(--glass); backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 40px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .flip-card-front:hover { border-color: var(--accent); box-shadow: 0 15px 40px rgba(139, 92, 246, 0.25); }
+        .flip-card-back {
+            transform: rotateY(180deg); border-color: var(--accent);
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.2);
+        }
+        .flip-card-front h3, .flip-card-back h3 { color: var(--accent); margin-bottom: 15px; font-size: 1.8rem; }
+        .flip-card-front p, .flip-card-back p { font-size: 1.2rem; }
+        .click-hint { font-size: 0.9rem; color: var(--accent); position: absolute; bottom: 20px; right: 25px; opacity: 0.7; }
+
+        /* --- БЛОК 3D ВИЗУАЛИЗАЦИИ --- */
+        .future-3d-large {
+            max-width: 900px; width: 100%; margin: 60px auto 0 auto;
+            border: 1px dashed var(--accent); border-radius: 20px;
+            padding: 60px 40px; text-align: center;
+            background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .future-3d-large:hover { box-shadow: 0 0 30px rgba(139, 92, 246, 0.2); background: rgba(20, 20, 20, 0.6); }
+
+        /* --- СОЦСЕТИ --- */
+        .socials-container { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; }
+        .social-btn { display: flex; align-items: center; gap: 12px; padding: 18px 35px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 15px; text-decoration: none; color: var(--text); font-size: 1.3rem; transition: 0.3s; }
+        .social-btn i { font-size: 1.8rem; color: var(--accent); }
+        .social-btn:hover { border-color: var(--accent); box-shadow: 0 0 25px var(--accent); transform: translateY(-5px); color: var(--accent); }
+
+        #spotify-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: none; border-radius: 14px; opacity: 0; transition: 0.5s; }
+
+        @media (max-width: 900px) { 
+            .hero { grid-template-columns: 1fr; text-align: center; gap: 20px; } 
+            .hero-image { justify-content: center; }
+            .hero-text h1 { font-size: 3.5rem; } 
+            .typewriter { animation: none; border: none; } 
+            .interests__cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ЗАСТАВКА СО СКАНЕРОМ -->
+    <div id="preloader">
+        <div class="loader-content">
+            <i class="fas fa-fingerprint" id="fingerprint-icon"></i>
+            <h1 id="decrypt-text">AUTHENTICATING...</h1>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ТЕКСТ СКАНИРОВАНИЯ В УГЛУ -->
+    <div id="scan-popup">Ожидание...</div>
+
+    <div id="spotify-widget">
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2Ehkonbn36nd0kWbcvBOs0?utm_source=generator&theme=0" width="300" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#home">Главная</a>
+            <a href="#about">Обо мне</a>
+            <a href="#interests">Интересы</a>
+            <a href="#socials">Связь</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="home" class="hero">
+            <div class="hero-text">
+                <h1>Привет, я <span class="glitch" data-text="Evil_bastard">Evil_bastard</span></h1>
+                <div style="display: inline-block; max-width: 100%;">
+                    <h2 class="typewriter" style="color: var(--accent); font-weight: normal;">Cybersecurity // Spec 125</h2>
+                </div>
+                <p>Мне 19 лет, локация — Украина. Студент ХПИ (125). Изучаю системы, ищу уязвимости и создаю безопасные решения. Развиваюсь в сфере инфобеза.</p>
+            </div>
+            <div class="hero-image">
+                <img src="portret.png" alt="Мой 3D Аватар">
+            </div>
+        </section>
+    </div>
+
+    <div class="ticker-wrap">
+        <div class="ticker-move">
+            <div class="ticker-item"><i class="fas fa-shield-alt"></i> KALI LINUX</div>
+            <div class="ticker-item"><i class="fas fa-bug"></i> METASPLOIT</div>
+            <div class="ticker-item"><i class="fab fa-python"></i> PYTHON</div>
+            <div class="ticker-item"><i class="fas fa-network-wired"></i> WIRESHARK</div>
+            <div class="ticker-item"><i class="fas fa-database"></i> SQL INJECTION</div>
+            <div class="ticker-item"><i class="fas fa-code"></i> C PROGRAMMING</div>
+            <div class="ticker-item"><i class="fas fa-shield-alt"></i> KALI LINUX</div>
+            <div class="ticker-item"><i class="fas fa-bug"></i> METASPLOIT</div>
+            <div class="ticker-item"><i class="fab fa-python"></i> PYTHON</div>
+            <div class="ticker-item"><i class="fas fa-network-wired"></i> WIRESHARK</div>
+            <div class="ticker-item"><i class="fas fa-database"></i> SQL INJECTION</div>
+            <div class="ticker-item"><i class="fas fa-code"></i> C PROGRAMMING</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <section id="about">
+            <h2 class="section-title">Terminal & Knowledge Map</h2>
+            <div class="terminal" onclick="document.getElementById('term-input').focus()">
+                <div class="terminal-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                </div>
+                <div class="terminal-body" id="terminalBody">
+                    <div id="term-history">
+                        <p><span class="prompt">root@khpi:~#</span> <span class="text">cat hint.txt</span></p>
+                        <p class="comment">Введите 'help'. Попробуйте 'rampage', 'ivoxygen' или 'clear'.</p>
+                    </div>
+                    <div class="term-input-line">
+                        <span class="prompt">root@khpi:~#</span>
+                        <input type="text" id="term-input" autocomplete="off" spellcheck="false">
+                    </div>
+                </div>
+            </div>
+
+            <canvas id="networkCanvas"></canvas>
+            <p style="text-align:center; color: var(--text-muted); margin-top: 10px; font-family: monospace;">[+] Knowledge Map. Наведите курсор на узлы сети для анализа данных.</p>
+        </section>
+
+        <section id="interests">
+            <h2 class="section-title">Интересы и Будущие проекты</h2>
+            
+            <div class="interests__cards">
+                <!-- Карточка 1: Dota 2 -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3><i class="fas fa-gamepad" style="color: var(--accent);"></i> Dota 2 & Спорт</h3>
+                            <p>В свободное время переключаюсь на баскетбол или залетаю в катки по Dota 2.</p>
+                            <span class="click-hint">[Нажми меня]</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 style="font-size: 1.5rem;">Подробнее</h3>
+                            <p>В Dota 2 наиграно почти 4.000 часов! Начал подростком, раньше сутками гнался за MMR.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка 2: Аниме -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3><i class="fas fa-film" style="color: var(--accent);"></i> Аниме</h3>
+                            <p>Обожаю японскую анимацию. Это отличный способ перезагрузить мозги и отвлечься.</p>
+                            <span class="click-hint">[Нажми меня]</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 style="font-size: 1.5rem;">Культура 2D</h3>
+                            <p>Начал смотреть аниме с раннего возраста, примерно лет в 10. Одним из первых и самых любимых тайтлов стала <strong>«Атака титанов»</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка 3: Музыка -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3><i class="fas fa-headphones" style="color: var(--accent);"></i> Музыка & Вайб</h3>
+                            <p>Тяжелый код и поиск уязвимостей требуют правильного саундтрека. Мой выбор — Phonk.</p>
+                            <span class="click-hint">[Нажми меня]</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 style="font-size: 1.5rem;">IVOXYGEN</h3>
+                            <p>Я большой фанат творчества <strong>IVOXYGEN</strong>. Его атмосферный стиль идеально подходит для работы за пк.<br><br>Кстати, не забудь написать <strong>play music</strong> в консоли выше!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- БЛОК ДЛЯ 3D ВИЗУАЛИЗАЦИИ -->
+            <div class="future-3d-large">
+                <i class="fas fa-cube" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; animation: floatCube 4s ease-in-out infinite;"></i>
+                <h3 style="font-size: 2.2rem; color: var(--text); margin-bottom: 15px;">3D Visualization Panel</h3>
+                <p style="font-size: 1.3rem; color: var(--text-muted);">Здесь зарезервировано место под интерактивную 3D-модель <strong>Toyota Supra MK4</strong>. <br>Система ожидает интеграции WebGL / Three.js...</p>
+                <style>
+                    @keyframes floatCube {
+                        0%, 100% { transform: translateY(0) rotate(0deg); }
+                        50% { transform: translateY(-10px) rotate(10deg); filter: drop-shadow(0 0 15px var(--accent)); }
+                    }
+                </style>
+            </div>
+
+        </section>
+
+        <section id="socials">
+            <div class="socials-container">
+                <a href="https://t.me/Evil_bastardd" target="_blank" class="social-btn"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                <a href="https://github.com/Evileen" target="_blank" class="social-btn"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://www.instagram.com/ev1l.bastard?igsh=N3BnMG56aHRraTJt&utm_source=qr" target="_blank" class="social-btn"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://www.tiktok.com/@evil.bastard?_r=1&_t=ZS-9654yGq5h1J" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i> TikTok</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- ЛОГИКА ЗАСТАВКИ СО СКРАМБЛОМ И ОТПЕЧАТКОМ ---
+        window.addEventListener('load', () => {
+            const decryptText = document.getElementById('decrypt-text');
+            const targetWord = "Ev1l_bastard";
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
+            let iter = 0;
+            
+            setTimeout(() => {
+                document.getElementById('fingerprint-icon').style.color = '#27c93f'; 
+                document.getElementById('progress-line').style.background = '#27c93f'; 
+                document.getElementById('fingerprint-icon').style.animation = 'none'; 
+                
+                const scramble = setInterval(() => {
+                    decryptText.innerText = targetWord.split('').map((letter, index) => {
+                        if (index < iter) return targetWord[index];
+                        return chars[Math.floor(Math.random() * chars.length)];
+                    }).join('');
+                    
+                    if (iter >= targetWord.length) clearInterval(scramble);
+                    iter += 1 / 3;
+                }, 30);
+            }, 1200);
+
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+                setTimeout(startFakeScan, 800);
+            }, 2800); 
+        });
+
+        function startFakeScan() {
+            const scanPopup = document.getElementById('scan-popup');
+            scanPopup.style.opacity = '1';
+            const scanSteps = [
+                "Scan: Initializing...",
+                "Scan: Resolving Visitor IP...",
+                "Scan: Checking Threat Intel...",
+                "Scan: No vulnerabilities detected.",
+                "Access: GRANTED."
+            ];
+            let sDelay = 0;
+            scanSteps.forEach((step) => {
+                setTimeout(() => { scanPopup.innerText = step; }, sDelay);
+                sDelay += 800;
+            });
+            setTimeout(() => { scanPopup.style.opacity = '0'; }, sDelay + 1000);
+        }
+
+        // АНИМАЦИЯ МАТРИЦЫ
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const alphabet = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const fontSize = 16; const columns = canvas.width / fontSize;
+        const rainDrops = Array(Math.floor(columns)).fill(1);
+
+        const draw = () => {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const matrixColor = getComputedStyle(document.body).getPropertyValue('--matrix-color').trim();
+            ctx.fillStyle = matrixColor || '#8b5cf6'; 
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+                rainDrops[i]++;
+            }
+        };
+        setInterval(draw, 30);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // --- ИНФОРМАТИВНАЯ КАРТА СЕТИ ---
+        const netCanvas = document.getElementById('networkCanvas');
+        const nCtx = netCanvas.getContext('2d');
+        let netW, netH;
+        let particles = []; 
+        let skillNodes = []; 
+        let mouse = { x: null, y: null };
+
+        const mySkills = [
+            { title: "Kali Linux", desc: "ОС для аудита и пентеста" },
+            { title: "Metasploit", desc: "Эксплуатация уязвимостей" },
+            { title: "Python", desc: "Автоматизация и скриптинг" },
+            { title: "C Programming", desc: "Понимание памяти и систем" },
+            { title: "SQL", desc: "Работа с БД / SQL Injection" },
+            { title: "Wireshark", desc: "Анализ сетевого трафика" },
+            { title: "English B1", desc: "Чтение тех. документации" }
+        ];
+
+        function initNetwork() {
+            netW = netCanvas.width = netCanvas.offsetWidth;
+            netH = netCanvas.height = netCanvas.offsetHeight;
+            particles = [];
+            skillNodes = [];
+
+            mySkills.forEach((skill, i) => {
+                let angle = (i / mySkills.length) * Math.PI * 2;
+                let radiusX = netW * 0.35;
+                let radiusY = netH * 0.3;
+                let cx = netW / 2 + Math.cos(angle) * radiusX;
+                let cy = netH / 2 + Math.sin(angle) * radiusY;
+                
+                skillNodes.push({
+                    x: cx, y: cy, 
+                    originX: cx, originY: cy,
+                    title: skill.title, desc: skill.desc,
+                    vx: (Math.random() - 0.5) * 0.5, 
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: 6, hovered: false
+                });
+            });
+
+            for(let i=0; i<30; i++) {
+                particles.push({
+                    x: Math.random() * netW, y: Math.random() * netH,
+                    vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5,
+                    radius: 2
+                });
+            }
+        }
+        initNetwork();
+        window.addEventListener('resize', initNetwork);
+
+        netCanvas.addEventListener('mousemove', (e) => {
+            const rect = netCanvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
+        });
+        netCanvas.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+        function animateNetwork() {
+            nCtx.clearRect(0, 0, netW, netH);
+            const color = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#8b5cf6';
+            
+            let allNodes = skillNodes.concat(particles);
+
+            for (let i = 0; i < allNodes.length; i++) {
+                let node = allNodes[i];
+                node.x += node.vx; node.y += node.vy;
+                
+                if(node.originX) { 
+                    if(Math.abs(node.x - node.originX) > 30) node.vx *= -1;
+                    if(Math.abs(node.y - node.originY) > 30) node.vy *= -1;
+                } else { 
+                    if (node.x < 0 || node.x > netW) node.vx *= -1;
+                    if (node.y < 0 || node.y > netH) node.vy *= -1;
+                }
+
+                for (let j = i; j < allNodes.length; j++) {
+                    let dx = allNodes[i].x - allNodes[j].x; let dy = allNodes[i].y - allNodes[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        nCtx.beginPath(); nCtx.strokeStyle = color; nCtx.globalAlpha = 1 - (dist/120);
+                        nCtx.lineWidth = 1; nCtx.moveTo(allNodes[i].x, allNodes[i].y); nCtx.lineTo(allNodes[j].x, allNodes[j].y); nCtx.stroke(); nCtx.globalAlpha = 1;
+                    }
+                }
+                
+                if (mouse.x) {
+                    let dx = node.x - mouse.x; let dy = node.y - mouse.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        nCtx.beginPath(); nCtx.strokeStyle = '#fff'; nCtx.globalAlpha = 1 - (dist/150);
+                        nCtx.lineWidth = 1.5; nCtx.moveTo(node.x, node.y); nCtx.lineTo(mouse.x, mouse.y); nCtx.stroke(); nCtx.globalAlpha = 1;
+                    }
+                    if(node.originX) { 
+                        node.hovered = dist < 40;
+                    }
+                } else {
+                    if(node.originX) node.hovered = false;
+                }
+
+                nCtx.beginPath(); nCtx.arc(node.x, node.y, node.hovered ? node.radius * 2 : node.radius, 0, Math.PI * 2);
+                nCtx.fillStyle = node.hovered ? '#fff' : color; nCtx.fill();
+            }
+
+            skillNodes.forEach(node => {
+                nCtx.font = "bold 16px monospace";
+                nCtx.fillStyle = '#fff';
+                nCtx.fillText(node.title, node.x + 15, node.y + 5);
+                
+                if (node.hovered) {
+                    nCtx.font = "14px monospace";
+                    nCtx.fillStyle = color;
+                    nCtx.fillText("> " + node.desc, node.x + 15, node.y + 25);
+                    
+                    nCtx.strokeStyle = color;
+                    nCtx.lineWidth = 1;
+                    nCtx.strokeRect(node.x + 10, node.y - 15, 250, 50);
+                }
+            });
+
+            requestAnimationFrame(animateNetwork);
+        }
+        animateNetwork();
+
+        // ЛОГИКА ТЕРМИНАЛА
+        const termInput = document.getElementById('term-input');
+        const termHistory = document.getElementById('term-history');
+        const termBody = document.getElementById('terminalBody');
+        const spotifyWidget = document.getElementById('spotify-widget');
+
+        termInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = this.value.trim().toLowerCase();
+                this.value = ''; let response = '';
+
+                if (cmd === 'help') {
+                    response = "Команды:<br> whoami<br> play music<br> rampage<br> ivoxygen<br> clear";
+                } else if (cmd === 'clear') {
+                    termHistory.innerHTML = ''; return;
+                } else if (cmd === 'whoami') {
+                    response = "Evil_bastard // 19 лет, Украина // Студент ХПИ 125.";
+                } else if (cmd === 'play music') {
+                    spotifyWidget.style.display = 'block'; setTimeout(() => { spotifyWidget.style.opacity = '1'; }, 50);
+                    response = "<span style='color:var(--accent)'>[+] Инициализация Spotify...</span>";
+                } else if (cmd === 'rampage') {
+                    document.body.classList.toggle('rampage-mode');
+                    response = document.body.classList.contains('rampage-mode') 
+                        ? "<span style='color:#ff003c; font-weight:bold;'>[!] RAMPAGE MODE ACTIVATED. УГРОЗА ОБНАРУЖЕНА.</span>" 
+                        : "Система стабилизирована.";
+                } else if (cmd === 'ivoxygen') {
+                    response = `<pre style="color:var(--accent); font-size:0.8rem; line-height:1;">
+  ___ _  _ _____  ___   _____ ___ _  _ 
+ |_ _| || | _ \\ \\/ / \\ / / __| __| \\| |
+  | || \\/ |   /\\  / \\ V / (_ | _|| .\` |
+ |___|\\__/|_|_\\ \\/   |_| \\___|___|_|\\_|
+ [ "I lost my mind in cyberspace" ]</pre>`;
+                } else if (cmd !== '') {
+                    response = `bash: ${cmd}: команда не найдена.`;
+                }
+
+                if (cmd !== '') {
+                    termHistory.innerHTML += `<p><span class="prompt">root@khpi:~#</span> <span class="text">${cmd}</span></p>`;
+                    if(response) termHistory.innerHTML += `<p>${response}</p>`;
+                }
+                termBody.scrollTop = termBody.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
