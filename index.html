@@ -213,11 +213,11 @@
             max-width: 1000px; width: 100%;
             margin: 60px auto 0 auto;
             display: flex; flex-direction: column; align-items: center; 
-            gap: 80px; /* Увеличено с 30px для большего пространства между 3D и текстом */
+            gap: 50px; 
         }
         
         .future-3d-large {
-            width: 100%; height: 600px; /* Увеличено для свободного вращения машины */
+            width: 100%; height: 750px; /* Увеличено с 600px до 750px для свободного вращения */
             position: relative;
             display: flex; align-items: center; justify-content: center;
             background: transparent;
@@ -238,7 +238,7 @@
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
         }
         .supra-info h3 { font-size: 2.2rem; color: var(--accent); margin-bottom: 15px; }
-        .supra-info p { font-size: 1.2rem; color: var(--text); line-height: 1.6; } /* Цвет текста заменен на чистый белый */
+        .supra-info p { font-size: 1.2rem; color: var(--text); line-height: 1.6; }
         .supra-info strong { color: var(--accent); }
 
         /* --- СОЦСЕТИ --- */
@@ -731,8 +731,8 @@
 
                 const maxDim = Math.max(size.x, size.y, size.z);
                 
-                // Делаем машину крупнее (чем больше цифра, тем крупнее модель в холсте)
-                const scale = 8 / maxDim; 
+                // Слегка уменьшили коэффициент с 8 до 7, чтобы машина точно помещалась в 3D-зону
+                const scale = 7 / maxDim; 
                 model.scale.set(scale, scale, scale);
 
                 // Центрируем модель
@@ -744,8 +744,8 @@
                 placeholder.style.display = 'none';
                 container.appendChild(renderer.domElement);
 
-                // Ставим камеру чуть ближе
-                camera.position.set(4, 2.5, 5);
+                // Чуть отодвинули камеру назад для большего обзора
+                camera.position.set(5, 3, 7);
                 controls.target.set(0, 0, 0); 
                 controls.update();
             },
