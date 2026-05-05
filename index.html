@@ -372,16 +372,18 @@
             </div>
 
             <!-- БЛОК ДЛЯ 3D ВИЗУАЛИЗАЦИИ -->
-            <div class="future-3d-large">
-                <i class="fas fa-cube" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; animation: floatCube 4s ease-in-out infinite;"></i>
-                <h3 style="font-size: 2.2rem; color: var(--text); margin-bottom: 15px;">3D Visualization Panel</h3>
-                <p style="font-size: 1.3rem; color: var(--text-muted);">Здесь зарезервировано место под интерактивную 3D-модель <strong>Toyota Supra MK4</strong>. <br>Система ожидает интеграции WebGL / Three.js...</p>
-                <style>
-                    @keyframes floatCube {
-                        0%, 100% { transform: translateY(0) rotate(0deg); }
-                        50% { transform: translateY(-10px) rotate(10deg); filter: drop-shadow(0 0 15px var(--accent)); }
-                    }
-                </style>
+            <div class="future-3d-large" id="supra-container" style="min-height: 400px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                <div id="placeholder-content">
+                    <i class="fas fa-cube" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; animation: floatCube 4s ease-in-out infinite;"></i>
+                    <h3 style="font-size: 2.2rem; color: var(--text); margin-bottom: 15px;">3D Visualization Panel</h3>
+                    <p style="font-size: 1.3rem; color: var(--text-muted);">Загрузка WebGL / Three.js...</p>
+                    <style>
+                        @keyframes floatCube {
+                            0%, 100% { transform: translateY(0) rotate(0deg); }
+                            50% { transform: translateY(-10px) rotate(10deg); filter: drop-shadow(0 0 15px var(--accent)); }
+                        }
+                    </style>
+                </div>
             </div>
 
         </section>
@@ -631,6 +633,78 @@
                     if(response) termHistory.innerHTML += `<p>${response}</p>`;
                 }
                 termBody.scrollTop = termBody.scrollHeight;
+            }
+        });
+    </script>
+
+    <!-- ИНТЕГРАЦИЯ THREE.JS И 3D МОДЕЛИ -->
+    <script type="module">
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
+        import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/controls/OrbitControls.js';
+
+        const container = document.getElementById('supra-container');
+        const placeholder = document.getElementById('placeholder-content');
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(4, 2, 5);
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.5;
+
+        // Настраиваем свет для модели
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+        directionalLight.position.set(5, 10, 7.5);
+        scene.add(directionalLight);
+
+        const loader = new GLTFLoader();
+        
+        // Загрузка модели по указанному тобой имени
+        loader.load(
+            '1994_toyota_supra_mk_iv_bomex_fast_furious.glb', 
+            function (gltf) {
+                const model = gltf.scene;
+                
+                // Масштаб и позиция. Возможно, эти значения придется подкрутить, 
+                // если модель изначально очень огромная или слишком маленькая
+                model.scale.set(1, 1, 1); 
+                model.position.y = -1; 
+                
+                scene.add(model);
+
+                // Прячем текст загрузки и показываем саму модель
+                placeholder.style.display = 'none';
+                container.appendChild(renderer.domElement);
+            },
+            undefined, 
+            function (error) {
+                console.error('Ошибка загрузки модели:', error);
+                placeholder.innerHTML = `<p style="color: red;">Ошибка загрузки 3D модели. Проверьте имя файла и загружен ли он на GitHub.</p>`;
+            }
+        );
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); 
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            if(container.clientWidth > 0) {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
             }
         });
     </script>
