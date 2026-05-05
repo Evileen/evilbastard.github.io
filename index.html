@@ -208,15 +208,38 @@
         .flip-card-front p, .flip-card-back p { font-size: 1.2rem; }
         .click-hint { font-size: 0.9rem; color: var(--accent); position: absolute; bottom: 20px; right: 25px; opacity: 0.7; }
 
-        /* --- БЛОК 3D ВИЗУАЛИЗАЦИИ --- */
+        /* --- БЛОК 3D ВИЗУАЛИЗАЦИИ И ИНФО --- */
+        .supra-section {
+            max-width: 1000px; width: 100%;
+            margin: 60px auto 0 auto;
+            display: flex; flex-direction: column; align-items: center; gap: 30px;
+        }
+        
         .future-3d-large {
-            max-width: 900px; width: 100%; margin: 60px auto 0 auto;
-            border: 1px dashed var(--accent); border-radius: 20px;
-            padding: 60px 40px; text-align: center;
-            background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(10px);
+            width: 100%; height: 500px; /* Высота для 3D холста */
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            /* Убрали фон и бордеры, чтобы машина висела на матрице */
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .supra-info {
+            text-align: center;
+            background: var(--glass); backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 35px 50px;
+            width: 100%; max-width: 900px;
             transition: 0.3s;
         }
-        .future-3d-large:hover { box-shadow: 0 0 30px rgba(139, 92, 246, 0.2); background: rgba(20, 20, 20, 0.6); }
+        .supra-info:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
+        }
+        .supra-info h3 { font-size: 2.2rem; color: var(--accent); margin-bottom: 15px; }
+        .supra-info p { font-size: 1.2rem; color: var(--text-muted); line-height: 1.6; }
+        .supra-info strong { color: var(--text); }
 
         /* --- СОЦСЕТИ --- */
         .socials-container { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; }
@@ -232,6 +255,8 @@
             .hero-text h1 { font-size: 3.5rem; } 
             .typewriter { animation: none; border: none; } 
             .interests__cards { grid-template-columns: 1fr; }
+            .supra-info { padding: 25px 20px; }
+            .future-3d-large { height: 350px; }
         }
     </style>
 </head>
@@ -371,18 +396,27 @@
                 </div>
             </div>
 
-            <!-- БЛОК ДЛЯ 3D ВИЗУАЛИЗАЦИИ -->
-            <div class="future-3d-large" id="supra-container" style="min-height: 400px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                <div id="placeholder-content">
-                    <i class="fas fa-cube" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; animation: floatCube 4s ease-in-out infinite;"></i>
-                    <h3 style="font-size: 2.2rem; color: var(--text); margin-bottom: 15px;">3D Visualization Panel</h3>
-                    <p style="font-size: 1.3rem; color: var(--text-muted);">Загрузка WebGL / Three.js...</p>
-                    <style>
-                        @keyframes floatCube {
-                            0%, 100% { transform: translateY(0) rotate(0deg); }
-                            50% { transform: translateY(-10px) rotate(10deg); filter: drop-shadow(0 0 15px var(--accent)); }
-                        }
-                    </style>
+            <!-- БЛОК ДЛЯ 3D ВИЗУАЛИЗАЦИИ И ИНФО О МАШИНЕ -->
+            <div class="supra-section">
+                <!-- Контейнер для 3D, без фона и рамок -->
+                <div class="future-3d-large" id="supra-container">
+                    <div id="placeholder-content">
+                        <i class="fas fa-cube" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; animation: floatCube 4s ease-in-out infinite;"></i>
+                        <h3 style="font-size: 2.2rem; color: var(--text); margin-bottom: 15px;">3D Visualization Panel</h3>
+                        <p style="font-size: 1.3rem; color: var(--text-muted);">Загрузка WebGL / Three.js...</p>
+                        <style>
+                            @keyframes floatCube {
+                                0%, 100% { transform: translateY(0) rotate(0deg); }
+                                50% { transform: translateY(-10px) rotate(10deg); filter: drop-shadow(0 0 15px var(--accent)); }
+                            }
+                        </style>
+                    </div>
+                </div>
+
+                <!-- Текстовый блок под машиной -->
+                <div class="supra-info">
+                    <h3><i class="fas fa-car" style="color: var(--accent);"></i> JDM Legend: Supra MK4</h3>
+                    <p>Это моя самая любимая машина, инженерия и стиль которой вызывают у меня искреннее восхищение. Под капотом находится легендарный <strong>2JZ-GTE</strong> — двигатель, прославившийся своей невероятной надежностью и безумным потенциалом для тюнинга. Настоящая икона японского автопрома и звезда уличной культуры.</p>
                 </div>
             </div>
 
@@ -669,7 +703,7 @@
         controls.autoRotateSpeed = 1.5;
 
         // --- УЛУЧШЕННЫЙ СВЕТ ---
-        // Машины часто темные, поэтому светим ярко со всех сторон
+        // Светим ярко со всех сторон, чтобы машина красиво блестела
         const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
         scene.add(ambientLight);
         
@@ -683,43 +717,42 @@
 
         const loader = new GLTFLoader();
         
+        // --- ЗАГРУЗКА И НАСТРОЙКА МОДЕЛИ ---
         loader.load(
             'toyota_supra_mk4_a80.glb', 
             function (gltf) {
                 const model = gltf.scene;
                 scene.add(model);
 
-                // --- УМНОЕ МАСШТАБИРОВАНИЕ И ЦЕНТРИРОВАНИЕ ---
-                // 1. Создаем коробку вокруг модели, чтобы узнать её реальные размеры
+                // УМНОЕ МАСШТАБИРОВАНИЕ
                 const box = new THREE.Box3().setFromObject(model);
                 const size = box.getSize(new THREE.Vector3());
                 const center = box.getCenter(new THREE.Vector3());
 
-                // 2. Находим самую длинную сторону модели
                 const maxDim = Math.max(size.x, size.y, size.z);
                 
-                // 3. Подгоняем масштаб так, чтобы машина занимала примерно 6 единиц пространства (идеально для камеры)
-                const scale = 6 / maxDim;
+                // Делаем машину крупнее (чем больше цифра, тем крупнее модель в холсте)
+                const scale = 8 / maxDim; 
                 model.scale.set(scale, scale, scale);
 
-                // 4. Заново вычисляем центр (после масштабирования) и сдвигаем машину ровно в (0,0,0)
+                // Центрируем модель
                 box.setFromObject(model);
                 box.getCenter(center);
                 model.position.sub(center);
 
-                // Прячем текст загрузки и показываем холст с машиной
+                // Прячем текст загрузки и показываем саму модель
                 placeholder.style.display = 'none';
                 container.appendChild(renderer.domElement);
 
-                // 5. Ставим камеру на идеальное расстояние сбоку-сверху
-                camera.position.set(5, 3, 6);
-                controls.target.set(0, 0, 0); // Камера смотрит четко в центр машины
+                // Ставим камеру чуть ближе
+                camera.position.set(4, 2.5, 5);
+                controls.target.set(0, 0, 0); 
                 controls.update();
             },
             undefined, 
             function (error) {
                 console.error('Ошибка загрузки модели:', error);
-                placeholder.innerHTML = `<p style="color: red;">Ошибка загрузки 3D модели.</p>`;
+                placeholder.innerHTML = `<p style="color: red;">Ошибка загрузки 3D модели. Проверьте консоль.</p>`;
             }
         );
 
