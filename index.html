@@ -6,7 +6,6 @@
     <title>Портфолио | Evil_bastard</title>
     
     <link rel="icon" type="image/png" href="favicon.png">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -39,7 +38,7 @@
         html { scroll-behavior: smooth; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* ЗАСТАВКА (ОТПЕЧАТОК ПАЛЬЦА И НИК) */
+        /* ЗАСТАВКА */
         #preloader {
             position: fixed; inset: 0; background: #000; z-index: 99999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -89,7 +88,6 @@
         .loaded nav { transform: translateY(0); }
         .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: center; gap: 40px; }
         
-        /* --- Анимация кнопок навигации --- */
         .nav-container a {
             color: var(--text); text-decoration: none; font-weight: 500; font-size: 1.2rem;
             position: relative; padding: 5px 10px; transition: all 0.3s ease;
@@ -108,7 +106,6 @@
         #socials { min-height: auto; padding: 60px 0 100px 0; }
 
         /* ГЛАВНЫЙ ЭКРАН */
-        /* Немного изменили сетку, чтобы дать картинке больше места */
         .hero { display: grid; grid-template-columns: 1.2fr 1.1fr; align-items: center; gap: 30px; }
         .hero-text h1 { font-size: 5rem; margin-bottom: 15px; line-height: 1.1; letter-spacing: -1px; }
         
@@ -128,16 +125,11 @@
         
         .hero-text p { font-size: 1.6rem; color: var(--text-muted); margin-bottom: 30px; margin-top: 20px; }
         .hero-image { display: flex; justify-content: flex-end; align-items: center; width: 100%; }
-        
-        /* Сделали аватара еще больше с помощью scale */
         .hero-image img { 
-            width: 100%; 
-            max-width: 800px; 
-            object-fit: contain; 
+            width: 100%; max-width: 800px; object-fit: contain; 
             filter: drop-shadow(0 0 50px var(--accent)); 
             animation: float 6s ease-in-out infinite; 
         }
-        /* Анимация с учетом увеличенного размера (scale) */
         @keyframes float { 
             0%, 100% { transform: translateY(0) scale(1.15); } 
             50% { transform: translateY(-20px) scale(1.15); filter: drop-shadow(0 0 70px var(--accent)); } 
@@ -167,10 +159,8 @@
         .term-input-line { display: flex; gap: 10px; margin-top: 10px; }
         #term-input { background: transparent; border: none; color: var(--text); font-family: inherit; font-size: inherit; flex: 1; outline: none; }
 
-        /* ИНТЕРАКТИВНАЯ СЕТЬ */
         #networkCanvas {
-            width: 100%; height: 450px; 
-            max-width: 900px; margin: 40px auto 0 auto; display: block;
+            width: 100%; height: 450px; max-width: 900px; margin: 40px auto 0 auto; display: block;
             background: rgba(10, 10, 10, 0.5); border: 1px solid var(--glass-border); 
             border-radius: 15px; box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); cursor: crosshair;
         }
@@ -220,80 +210,20 @@
         .supra-info p { font-size: 1.2rem; color: var(--text); line-height: 1.6; } 
         .supra-info strong { color: var(--accent); }
 
-        /* --- ВЗГЛЯД СО СТОРОНЫ (ИНТЕРАКТИВНЫЕ ПЛАШКИ) --- */
-        .view-from-outside-section {
-            max-width: 1100px;
-            margin: 0 auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-        .expandable-cards-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-        }
-        .expand-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .expand-card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
-        }
-        .expand-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 30px 40px;
-            user-select: none;
-        }
-        .expand-card-header h3 {
-            margin: 0;
-            font-size: 1.7rem;
-            color: var(--accent);
-        }
-        .toggle-icon {
-            position: relative;
-            width: 24px;
-            height: 24px;
-        }
-        .toggle-icon::before, .toggle-icon::after {
-            content: "";
-            position: absolute;
-            background-color: var(--text);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
+        /* --- ВЗГЛЯД СО СТОРОНЫ --- */
+        .view-from-outside-section { max-width: 1100px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 30px; }
+        .expandable-cards-container { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        .expand-card { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 15px; overflow: hidden; cursor: pointer; transition: 0.3s; }
+        .expand-card:hover { border-color: var(--accent); box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15); }
+        .expand-card-header { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; user-select: none; }
+        .expand-card-header h3 { margin: 0; font-size: 1.7rem; color: var(--accent); }
+        .toggle-icon { position: relative; width: 24px; height: 24px; }
+        .toggle-icon::before, .toggle-icon::after { content: ""; position: absolute; background-color: var(--text); transition: transform 0.3s ease, background-color 0.3s ease; }
         .toggle-icon::before { top: 0; left: 11px; width: 2px; height: 24px; }
         .toggle-icon::after { top: 11px; left: 0; width: 24px; height: 2px; }
-        
-        .expand-card-body {
-            max-height: 0;
-            padding: 0 40px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease-out;
-        }
-        .expand-card-body p {
-            margin: 0;
-            padding-bottom: 30px;
-            color: var(--text-muted);
-            font-size: 1.25rem;
-            line-height: 1.6;
-            font-style: italic;
-        }
-        .expand-card.active .expand-card-body {
-            max-height: 800px;
-            opacity: 1;
-            visibility: visible;
-        }
+        .expand-card-body { max-height: 0; padding: 0 40px; opacity: 0; visibility: hidden; transition: all 0.4s ease-out; }
+        .expand-card-body p { margin: 0; padding-bottom: 30px; color: var(--text-muted); font-size: 1.25rem; line-height: 1.6; font-style: italic; }
+        .expand-card.active .expand-card-body { max-height: 800px; opacity: 1; visibility: visible; }
         .expand-card.active .toggle-icon::before { transform: rotate(90deg); opacity: 0; }
         .expand-card.active .toggle-icon::after { transform: rotate(180deg); background-color: var(--accent); }
 
@@ -305,59 +235,39 @@
 
         #spotify-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: none; border-radius: 14px; opacity: 0; transition: 0.5s; }
 
-        /* ========================================================
-           АДАПТАЦИЯ ПОД МОБИЛЬНЫЕ УСТРОЙСТВА (SMARTPHONES & TABLETS)
-           ======================================================== */
         @media (max-width: 900px) { 
             .container { padding: 0 20px; }
             .nav-container { flex-wrap: wrap; gap: 15px; padding: 0 10px; }
             .nav-container a { font-size: 1rem; }
-            
             .hero { grid-template-columns: 1fr; text-align: center; gap: 20px; margin-top: 30px; } 
             .hero-image { justify-content: center; }
-            /* На мобильных немного убираем scale, чтобы не вылезало за экран */
             .hero-image img { animation: floatMobile 6s ease-in-out infinite; }
-            @keyframes floatMobile { 
-                0%, 100% { transform: translateY(0) scale(1); } 
-                50% { transform: translateY(-20px) scale(1); filter: drop-shadow(0 0 70px var(--accent)); } 
-            }
-
+            @keyframes floatMobile { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1); filter: drop-shadow(0 0 70px var(--accent)); } }
             .hero-text h1 { font-size: 3rem; } 
             .typewriter { font-size: 1.4rem; white-space: normal; animation: none; border: none; } 
             .hero-text p { font-size: 1.1rem; }
-            
             .section-title { font-size: 2rem; margin-bottom: 30px; }
-            
             .terminal-body { font-size: 1rem; padding: 15px; }
-            #term-input { font-size: 16px; } /* Предотвращает автозум на iOS */
-            
+            #term-input { font-size: 16px; } 
             #networkCanvas { height: 300px; }
-
             .interests__cards { grid-template-columns: 1fr; }
             .flip-card-front, .flip-card-back { padding: 25px; }
             .flip-card-front h3, .flip-card-back h3 { font-size: 1.4rem; }
             .flip-card-front p, .flip-card-back p { font-size: 1rem; }
-            
             .supra-section { gap: 30px; margin-top: 40px; }
             .future-3d-large { height: 400px; padding: 10px; } 
             .supra-info { padding: 20px; }
             .supra-info h3 { font-size: 1.6rem; }
             .supra-info p { font-size: 1rem; }
-
-            /* Адаптация новых плашек для телефонов */
             .expand-card-header { padding: 20px 25px; }
             .expand-card-header h3 { font-size: 1.3rem; }
             .expand-card-body p { font-size: 1.1rem; padding-bottom: 25px; }
             .expand-card-body { padding: 0 25px; }
-            
             .socials-container { flex-direction: column; gap: 15px; padding: 0 10px;}
             .social-btn { width: 100%; justify-content: center; }
-            
-            /* Spotify выравнивается по центру снизу */
             #spotify-widget { bottom: 15px; right: 50%; transform: translateX(50%); width: 90%; max-width: 300px; }
         }
         
-        /* Для совсем маленьких экранов */
         @media (max-width: 480px) {
             .hero-text h1 { font-size: 2.2rem; }
             #fingerprint-icon { font-size: 4rem; }
@@ -843,7 +753,6 @@
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         
-        // --- НОВЫЕ НАСТРОЙКИ ДЛЯ РЕАЛИЗМА ---
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.2;
         renderer.outputColorSpace = THREE.SRGBColorSpace; 
@@ -852,15 +761,32 @@
         controls.enableDamping = true;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 1.5;
-        controls.enableZoom = false; // Отключаем зум, чтобы не мешать прокрутке страницы
+        controls.enableZoom = false; 
 
-        // --- ОКРУЖЕНИЕ (ENVIRONMENT MAP) ---
-        // Генерируем отражения на кузове машины
+        // --- ЛОГИКА ВОЗВРАТА КАМЕРЫ ---
+        const defaultCameraPosition = new THREE.Vector3(5, 3, 7);
+        let isReturning = false;
+        let inactivityTimer;
+        const INACTIVITY_DELAY = 12000; // 12 секунд бездействия
+
+        function resetInactivityTimer() {
+            isReturning = false; 
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                isReturning = true;
+            }, INACTIVITY_DELAY);
+        }
+
+        controls.addEventListener('start', resetInactivityTimer);
+        controls.addEventListener('change', () => {
+            if (!isReturning) resetInactivityTimer();
+        });
+
+        // --- ОКРУЖЕНИЕ И СВЕТ ---
         const pmremGenerator = new THREE.PMREMGenerator(renderer);
         pmremGenerator.compileEquirectangularShader();
         scene.environment = pmremGenerator.fromScene(new THREE.Scene()).texture;
 
-        // --- СВЕТ ---
         const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
         scene.add(ambientLight);
         
@@ -872,18 +798,14 @@
         dirLightBack.position.set(-10, 10, -10);
         scene.add(dirLightBack);
 
-        // --- ИНТЕРАКТИВНЫЙ СВЕТ (Следование за мышью) ---
-        const mouseLight = new THREE.PointLight(0x8b5cf6, 30, 20); // Яркий фиолетовый/акцентный свет
+        const mouseLight = new THREE.PointLight(0x8b5cf6, 30, 20); 
         scene.add(mouseLight);
 
-        // Обрабатываем движение мыши по контейнеру с 3D
         container.addEventListener('mousemove', (event) => {
             const rect = container.getBoundingClientRect();
-            // Преобразуем координаты в диапазон от -1 до 1
             const x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
             const y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
             
-            // Двигаем PointLight
             mouseLight.position.x = x * 8;
             mouseLight.position.y = y * 5 + 2;
             mouseLight.position.z = 5;
@@ -891,13 +813,11 @@
 
         const loader = new GLTFLoader();
         
-        // --- ЗАГРУЗКА И НАСТРОЙКА МОДЕЛИ ---
         loader.load(
             'toyota_supra_mk4_a80.glb', 
             function (gltf) {
                 const model = gltf.scene;
 
-                // Усиливаем интенсивность отражений (Environment Map) для материалов
                 model.traverse((child) => {
                     if (child.isMesh && child.material) {
                         child.material.envMapIntensity = 2.0; 
@@ -912,7 +832,6 @@
                 const center = box.getCenter(new THREE.Vector3());
 
                 const maxDim = Math.max(size.x, size.y, size.z);
-                
                 const scale = 7 / maxDim; 
                 model.scale.set(scale, scale, scale);
 
@@ -923,9 +842,11 @@
                 placeholder.style.display = 'none';
                 container.appendChild(renderer.domElement);
 
-                camera.position.set(5, 3, 7);
+                camera.position.copy(defaultCameraPosition);
                 controls.target.set(0, 0, 0); 
                 controls.update();
+
+                resetInactivityTimer();
             },
             undefined, 
             function (error) {
@@ -936,6 +857,16 @@
 
         function animate() {
             requestAnimationFrame(animate);
+
+            if (isReturning) {
+                camera.position.lerp(defaultCameraPosition, 0.05);
+                
+                if (camera.position.distanceTo(defaultCameraPosition) < 0.01) {
+                    isReturning = false;
+                    camera.position.copy(defaultCameraPosition); 
+                }
+            }
+
             controls.update(); 
             renderer.render(scene, camera);
         }
