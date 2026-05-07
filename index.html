@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Портфолио | Evil_bastard</title>
     
-    <!-- ИКОНКА ДЛЯ ВКЛАДКИ (ФАВИКОН) -->
     <link rel="icon" type="image/png" href="favicon.png">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -128,7 +127,8 @@
         
         .hero-text p { font-size: 1.6rem; color: var(--text-muted); margin-bottom: 30px; margin-top: 20px; }
         .hero-image { display: flex; justify-content: flex-end; align-items: center; width: 100%; }
-        .hero-image img { width: 100%; max-width: 500px; object-fit: contain; filter: drop-shadow(0 0 50px var(--accent)); animation: float 6s ease-in-out infinite; }
+        /* Увеличен размер аватара до 650px */
+        .hero-image img { width: 100%; max-width: 650px; object-fit: contain; filter: drop-shadow(0 0 50px var(--accent)); animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); filter: drop-shadow(0 0 70px var(--accent)); } }
 
         /* БЕГУЩАЯ СТРОКА */
@@ -209,8 +209,9 @@
         .supra-info strong { color: var(--accent); }
 
         /* --- ВЗГЛЯД СО СТОРОНЫ (ИНТЕРАКТИВНЫЕ ПЛАШКИ) --- */
+        /* Увеличена максимальная ширина контейнера */
         .view-from-outside-section {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             width: 100%;
             display: flex;
@@ -236,22 +237,24 @@
             border-color: var(--accent);
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
         }
+        /* Увеличены отступы внутри заголовка плашки */
         .expand-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 25px 30px;
+            padding: 30px 40px;
             user-select: none;
         }
+        /* Увеличен шрифт заголовка плашки */
         .expand-card-header h3 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             color: var(--accent);
         }
         .toggle-icon {
             position: relative;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
         }
         .toggle-icon::before, .toggle-icon::after {
             content: "";
@@ -259,21 +262,23 @@
             background-color: var(--text);
             transition: transform 0.3s ease, background-color 0.3s ease;
         }
-        .toggle-icon::before { top: 0; left: 9px; width: 2px; height: 20px; }
-        .toggle-icon::after { top: 9px; left: 0; width: 20px; height: 2px; }
+        .toggle-icon::before { top: 0; left: 11px; width: 2px; height: 24px; }
+        .toggle-icon::after { top: 11px; left: 0; width: 24px; height: 2px; }
         
+        /* Увеличены боковые отступы внутри плашки */
         .expand-card-body {
             max-height: 0;
-            padding: 0 30px;
+            padding: 0 40px;
             opacity: 0;
             visibility: hidden;
             transition: all 0.4s ease-out;
         }
+        /* Увеличен шрифт текста и нижний отступ */
         .expand-card-body p {
             margin: 0;
-            padding-bottom: 25px;
+            padding-bottom: 30px;
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             line-height: 1.6;
             font-style: italic;
         }
@@ -325,11 +330,11 @@
             .supra-info h3 { font-size: 1.6rem; }
             .supra-info p { font-size: 1rem; }
 
-            /* Адаптация новых плашек */
-            .expand-card-header { padding: 20px; }
-            .expand-card-header h3 { font-size: 1.2rem; }
-            .expand-card-body p { font-size: 1rem; padding-bottom: 20px; }
-            .expand-card-body { padding: 0 20px; }
+            /* Адаптация новых плашек для телефонов */
+            .expand-card-header { padding: 20px 25px; }
+            .expand-card-header h3 { font-size: 1.3rem; }
+            .expand-card-body p { font-size: 1.1rem; padding-bottom: 25px; }
+            .expand-card-body { padding: 0 25px; }
             
             .socials-container { flex-direction: column; gap: 15px; padding: 0 10px;}
             .social-btn { width: 100%; justify-content: center; }
@@ -349,7 +354,6 @@
 </head>
 <body>
 
-    <!-- ЗАСТАВКА СО СКАНЕРОМ -->
     <div id="preloader">
         <div class="loader-content">
             <i class="fas fa-fingerprint" id="fingerprint-icon"></i>
@@ -360,7 +364,6 @@
         </div>
     </div>
 
-    <!-- ТЕКСТ СКАНИРОВАНИЯ В УГЛУ -->
     <div id="scan-popup">Ожидание...</div>
 
     <div id="spotify-widget">
@@ -374,7 +377,6 @@
             <a href="#home">Главная</a>
             <a href="#about">Обо мне</a>
             <a href="#interests">Интересы</a>
-            <!-- НОВАЯ КНОПКА -->
             <a href="#view-from-outside">Взгляд со стороны</a>
             <a href="#socials">Связь</a>
         </div>
@@ -439,7 +441,6 @@
             <h2 class="section-title">Интересы и Будущие проекты</h2>
             
             <div class="interests__cards">
-                <!-- Карточка 1: Dota 2 -->
                 <div class="flip-card" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
@@ -454,7 +455,6 @@
                     </div>
                 </div>
 
-                <!-- Карточка 2: Аниме -->
                 <div class="flip-card" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
@@ -469,7 +469,6 @@
                     </div>
                 </div>
 
-                <!-- Карточка 3: Музыка -->
                 <div class="flip-card" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
@@ -485,9 +484,7 @@
                 </div>
             </div>
 
-            <!-- БЛОК ДЛЯ 3D ВИЗУАЛИЗАЦИИ И ИНФО О МАШИНЕ -->
             <div class="supra-section">
-                <!-- Контейнер для 3D, без фона и рамок -->
                 <div class="future-3d-large" id="supra-container">
                     <div id="placeholder-content">
                         <i class="fas fa-cube" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; animation: floatCube 4s ease-in-out infinite;"></i>
@@ -502,7 +499,6 @@
                     </div>
                 </div>
 
-                <!-- Текстовый блок под машиной -->
                 <div class="supra-info">
                     <h3><i class="fas fa-car" style="color: var(--accent);"></i> JDM Legend: Supra MK4</h3>
                     <p>Это моя самая любимая машина, инженерия и стиль которой вызывают у меня искреннее восхищение. Под капотом находится легендарный <strong>2JZ-GTE</strong> — двигатель, прославившийся своей невероятной надежностью и безумным потенциалом для тюнинга. Настоящая икона японского автопрома и звезда уличной культуры.</p>
@@ -511,13 +507,11 @@
 
         </section>
 
-        <!-- НОВЫЙ РАЗДЕЛ: ВЗГЛЯД СО СТОРОНЫ -->
         <section id="view-from-outside" class="view-from-outside-section">
             <h2 class="section-title">Взгляд со стороны</h2>
             
             <div class="expandable-cards-container">
                 
-                <!-- Плашка 1 -->
                 <div class="expand-card" onclick="this.classList.toggle('active')">
                     <div class="expand-card-header">
                         <h3><i class="fas fa-brain" style="margin-right: 10px;"></i> Интеллект и стратегия</h3>
@@ -528,7 +522,6 @@
                     </div>
                 </div>
 
-                <!-- Плашка 2 -->
                 <div class="expand-card" onclick="this.classList.toggle('active')">
                     <div class="expand-card-header">
                         <h3><i class="fas fa-shield-virus" style="margin-right: 10px;"></i> Характер и выдержка</h3>
@@ -539,7 +532,6 @@
                     </div>
                 </div>
 
-                <!-- Плашка 3 -->
                 <div class="expand-card" onclick="this.classList.toggle('active')">
                     <div class="expand-card-header">
                         <h3><i class="fas fa-users" style="margin-right: 10px;"></i> Общение и эмпатия</h3>
@@ -550,14 +542,13 @@
                     </div>
                 </div>
 
-                <!-- Плашка 4 -->
                 <div class="expand-card" onclick="this.classList.toggle('active')">
                     <div class="expand-card-header">
                         <h3><i class="fas fa-user-secret" style="margin-right: 10px;"></i> Моя обратная сторона (Особенности)</h3>
                         <span class="toggle-icon"></span>
                     </div>
                     <div class="expand-card-body">
-                        <p>«Я за компьютером с 6 лет и глубоко погружен в цифровой мир, из-за чего в реальной жизни могу казаться немного ленивым или безынициативным. Я довольно чувствителен к деталям: иногда мелочь может сильно повлиять на мое настроение на весь день. А еще я склонен держать проблемы в себе, вместо того чтобы сразу их обсуждать. Но я знаю об этих чертах и работаю над ними.»</p>
+                        <p>«Я за компьютером с 6 лет и глубоко погружен в цифро мир, из-за чего в реальной жизни могу казаться немного ленивым или безынициативным. Я довольно чувствителен к деталям: иногда мелочь может сильно повлиять на мое настроение на весь день. А еще я склонен держать проблемы в себе, вместо того чтобы сразу их обсуждать. Но я знаю об этих чертах и работаю над ними.»</p>
                     </div>
                 </div>
 
@@ -813,7 +804,6 @@
         });
     </script>
 
-    <!-- ИМПОРТ-КАРТА (АДРЕСНАЯ КНИГА ДЛЯ БРАУЗЕРА) -->
     <script type="importmap">
       {
         "imports": {
@@ -823,7 +813,6 @@
       }
     </script>
 
-    <!-- ИНТЕГРАЦИЯ THREE.JS И 3D МОДЕЛИ -->
     <script type="module">
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
