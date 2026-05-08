@@ -112,7 +112,6 @@
         }
         .nav-container a::before { content: '['; left: -10px; }
         .nav-container a::after { content: ']'; right: -10px; }
-        /* Неоновое свечение ссылок */
         .nav-container a:hover { 
             color: var(--accent); letter-spacing: 2px; 
             text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent); 
@@ -194,22 +193,23 @@
             box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
         }
 
-        /* --- КАРТОЧКИ ИНТЕРЕСОВ (Glassmorphism + Depth) --- */
+        /* --- КАРТОЧКИ ИНТЕРЕСОВ --- */
         #interests { display: flex; flex-direction: column; align-items: center; gap: 40px; }
         .interests__cards { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; 
             width: 100%; max-width: 1400px; margin: 0 auto;
         }
-        .flip-card { background-color: transparent; min-height: 300px; perspective: 1000px; cursor: pointer; }
+        /* ИСПРАВЛЕНИЕ ЗАВИСАНИЯ: Анимация при наведении добавлена только к главному контейнеру карточки */
+        .flip-card { 
+            background-color: transparent; min-height: 300px; perspective: 1000px; cursor: pointer; 
+            transition: transform 0.3s ease;
+        }
+        .flip-card:hover { transform: translateY(-5px); }
+        
         .flip-card-inner {
             position: relative; width: 100%; height: 100%;
             transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
             transform-style: preserve-3d;
-        }
-        
-        /* 3D эффект наведения */
-        .flip-card:hover .flip-card-inner:not(.flipped) {
-            transform: scale(1.02) translateY(-5px);
         }
         .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
 
@@ -221,7 +221,6 @@
             transition: all 0.4s ease;
         }
         
-        /* Усиленный неоновый glow для карточек */
         .flip-card-front:hover, .flip-card.flipped .flip-card-back { 
             border-color: var(--accent); 
             box-shadow: 0 15px 40px rgba(139, 92, 246, 0.3), inset 0 0 15px rgba(139, 92, 246, 0.1); 
@@ -242,6 +241,33 @@
             position: relative; display: flex; align-items: center; justify-content: center;
             background: transparent; border: none; box-shadow: none;
         }
+        
+        /* СТИЛИ ПАНЕЛИ ВЫБОРА ЦВЕТА МАШИНЫ */
+        .car-color-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0; /* скрыто до загрузки авто */
+            transition: opacity 0.5s ease;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+        .car-color-panel label { color: var(--text); font-family: monospace; font-size: 1.1rem; }
+        #carColor {
+            -webkit-appearance: none; border: none; width: 32px; height: 32px;
+            border-radius: 50%; cursor: pointer; background: none; outline: none;
+        }
+        #carColor::-webkit-color-swatch-wrapper { padding: 0; }
+        #carColor::-webkit-color-swatch { border: 2px solid var(--accent); border-radius: 50%; }
+
         .supra-info {
             text-align: center; background: var(--glass); backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border); border-radius: 20px;
@@ -268,20 +294,16 @@
             overflow: hidden; cursor: pointer;
             transition: all 0.3s ease;
         }
-        /* Усиленный неон для плашек */
         .expand-card:hover {
             border-color: var(--accent);
             box-shadow: 0 0 25px rgba(139, 92, 246, 0.3);
             transform: translateY(-3px);
         }
         .expand-card:hover .expand-card-header h3 {
-            text-shadow: 0 0 10px var(--accent);
-            color: #fff;
+            text-shadow: 0 0 10px var(--accent); color: #fff;
         }
-        .expand-card:hover .toggle-icon::before, 
-        .expand-card:hover .toggle-icon::after {
-            background-color: var(--accent);
-            box-shadow: 0 0 8px var(--accent);
+        .expand-card:hover .toggle-icon::before, .expand-card:hover .toggle-icon::after {
+            background-color: var(--accent); box-shadow: 0 0 8px var(--accent);
         }
 
         .expand-card-header { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; user-select: none; }
@@ -307,13 +329,9 @@
         .expand-card.active .toggle-icon::before { transform: rotate(90deg); opacity: 0; }
         .expand-card.active .toggle-icon::after { transform: rotate(180deg); background-color: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
-        /* Каретка для эффекта печати */
         .typing-cursor::after {
-            content: '|';
-            animation: blink 0.7s infinite;
-            color: var(--accent);
-            text-shadow: 0 0 5px var(--accent);
-            margin-left: 5px;
+            content: '|'; animation: blink 0.7s infinite; color: var(--accent);
+            text-shadow: 0 0 5px var(--accent); margin-left: 5px;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
@@ -326,13 +344,9 @@
         }
         .social-btn i { font-size: 1.8rem; color: var(--accent); transition: 0.3s; }
         
-        /* Усиленный неон для кнопок связи */
         .social-btn:hover { 
-            border-color: var(--accent); 
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.5); 
-            transform: translateY(-5px); 
-            color: #fff; 
-            text-shadow: 0 0 10px var(--accent);
+            border-color: var(--accent); box-shadow: 0 0 25px rgba(139, 92, 246, 0.5); 
+            transform: translateY(-5px); color: #fff; text-shadow: 0 0 10px var(--accent);
         }
         .social-btn:hover i { color: #fff; text-shadow: 0 0 10px var(--accent); }
 
@@ -379,6 +393,10 @@
             .expand-card-body p { font-size: 1.1rem; padding-bottom: 25px; }
             .expand-card-body { padding: 0 25px; }
             
+            .car-color-panel { top: 10px; left: 10px; padding: 8px 10px; }
+            .car-color-panel label { font-size: 0.9rem; }
+            #carColor { width: 25px; height: 25px; }
+
             .socials-container { flex-direction: column; gap: 15px; padding: 0 10px;}
             .social-btn { width: 100%; justify-content: center; }
             #spotify-widget { bottom: 15px; right: 50%; transform: translateX(50%); width: 90%; max-width: 300px; }
@@ -525,6 +543,12 @@
 
             <div class="supra-section fade-in-section">
                 <div class="future-3d-large" id="supra-container">
+                    
+                    <div class="car-color-panel" id="car-color-controls">
+                        <label for="carColor">Color:</label>
+                        <input type="color" id="carColor" value="#ffffff" title="Выбрать цвет машины">
+                    </div>
+
                     <div id="placeholder-content">
                         <i class="fas fa-cube" style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; animation: floatCube 4s ease-in-out infinite;"></i>
                         <h3 style="font-size: 2.2rem; color: var(--text); margin-bottom: 15px;">3D Visualization Panel</h3>
@@ -602,14 +626,14 @@
     </div>
 
     <script>
-        // --- 1. АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ (Intersection Observer) ---
+        // --- 1. АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ ---
         document.addEventListener('DOMContentLoaded', () => {
             const observerOptions = { root: null, threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
             const scrollObserver = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
-                        obs.unobserve(entry.target); // Прекращаем следить после появления
+                        obs.unobserve(entry.target); 
                     }
                 });
             }, observerOptions);
@@ -619,32 +643,28 @@
             });
         });
 
-        // --- 2. ЭФФЕКТ "ПЕЧАТАЮЩЕГОСЯ" ТЕКСТА (TYPING EFFECT) ДЛЯ ПЛАШЕК ---
+        // --- 2. ЭФФЕКТ "ПЕЧАТАЮЩЕГОСЯ" ТЕКСТА (НЕЗАВИСИМЫЕ ПЛАШКИ) ---
         document.addEventListener('DOMContentLoaded', () => {
             const expandCards = document.querySelectorAll('.expand-card');
             
             expandCards.forEach(card => {
                 const pElement = card.querySelector('.expand-card-body p');
-                const fullText = pElement.innerHTML; // Сохраняем исходный текст
-                
-                // Очищаем текст перед началом
-                pElement.innerHTML = '';
+                const fullText = pElement.innerHTML; // Сохраняем текст
+                pElement.innerHTML = ''; // Очищаем изначально
                 
                 card.addEventListener('click', function() {
                     const isActive = this.classList.contains('active');
                     
-                    // Закрываем все остальные плашки и сбрасываем их текст
-                    expandCards.forEach(c => {
-                        c.classList.remove('active');
-                        clearInterval(c.typingInterval);
-                        const p = c.querySelector('.expand-card-body p');
-                        p.innerHTML = ''; 
-                        p.classList.remove('typing-cursor');
-                    });
-
-                    // Если кликнули на закрытую плашку — открываем и печатаем
-                    if (!isActive) {
+                    if (isActive) {
+                        // Если плашка была открыта - закрываем её
+                        this.classList.remove('active');
+                        clearInterval(this.typingInterval);
+                        pElement.classList.remove('typing-cursor');
+                        pElement.innerHTML = fullText; // Восстанавливаем текст, чтобы плавно свернулась высота
+                    } else {
+                        // Если закрыта - открываем и печатаем текст
                         this.classList.add('active');
+                        pElement.innerHTML = ''; 
                         pElement.classList.add('typing-cursor');
                         
                         let i = 0;
@@ -653,15 +673,15 @@
                             i++;
                             if (i > fullText.length) {
                                 clearInterval(this.typingInterval);
-                                pElement.classList.remove('typing-cursor'); // Убираем каретку в конце
+                                pElement.classList.remove('typing-cursor');
                             }
-                        }, 15); // Скорость печати (15мс на символ)
+                        }, 15); 
                     }
                 });
             });
         });
 
-        // --- ЛОГИКА ЗАСТАВКИ СО СКРАМБЛОМ И ОТПЕЧАТКОМ ---
+        // --- ЛОГИКА ЗАСТАВКИ ---
         window.addEventListener('load', () => {
             const decryptText = document.getElementById('decrypt-text');
             const targetWord = "Ev1l_bastard";
@@ -693,13 +713,7 @@
         function startFakeScan() {
             const scanPopup = document.getElementById('scan-popup');
             scanPopup.style.opacity = '1';
-            const scanSteps = [
-                "Scan: Initializing...",
-                "Scan: Resolving Visitor IP...",
-                "Scan: Checking Threat Intel...",
-                "Scan: No vulnerabilities detected.",
-                "Access: GRANTED."
-            ];
+            const scanSteps = ["Scan: Initializing...", "Scan: Resolving Visitor IP...", "Scan: Checking Threat Intel...", "Scan: No vulnerabilities detected.", "Access: GRANTED."];
             let sDelay = 0;
             scanSteps.forEach((step) => {
                 setTimeout(() => { scanPopup.innerText = step; }, sDelay);
@@ -734,10 +748,7 @@
         // --- ИНФОРМАТИВНАЯ КАРТА СЕТИ ---
         const netCanvas = document.getElementById('networkCanvas');
         const nCtx = netCanvas.getContext('2d');
-        let netW, netH;
-        let particles = []; 
-        let skillNodes = []; 
-        let mouse = { x: null, y: null };
+        let netW, netH; let particles = []; let skillNodes = []; let mouse = { x: null, y: null };
 
         const mySkills = [
             { title: "Kali Linux", desc: "ОС для аудита и пентеста" },
@@ -750,55 +761,30 @@
         ];
 
         function initNetwork() {
-            netW = netCanvas.width = netCanvas.offsetWidth;
-            netH = netCanvas.height = netCanvas.offsetHeight;
-            particles = [];
-            skillNodes = [];
+            netW = netCanvas.width = netCanvas.offsetWidth; netH = netCanvas.height = netCanvas.offsetHeight;
+            particles = []; skillNodes = [];
 
             mySkills.forEach((skill, i) => {
                 let angle = (i / mySkills.length) * Math.PI * 2;
-                let radiusX = netW * 0.35;
-                let radiusY = netH * 0.3;
-                let cx = netW / 2 + Math.cos(angle) * radiusX;
-                let cy = netH / 2 + Math.sin(angle) * radiusY;
-                
-                skillNodes.push({
-                    x: cx, y: cy, 
-                    originX: cx, originY: cy,
-                    title: skill.title, desc: skill.desc,
-                    vx: (Math.random() - 0.5) * 0.5, 
-                    vy: (Math.random() - 0.5) * 0.5,
-                    radius: 6, hovered: false
-                });
+                let radiusX = netW * 0.35; let radiusY = netH * 0.3;
+                let cx = netW / 2 + Math.cos(angle) * radiusX; let cy = netH / 2 + Math.sin(angle) * radiusY;
+                skillNodes.push({ x: cx, y: cy, originX: cx, originY: cy, title: skill.title, desc: skill.desc, vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5, radius: 6, hovered: false });
             });
 
-            for(let i=0; i<30; i++) {
-                particles.push({
-                    x: Math.random() * netW, y: Math.random() * netH,
-                    vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5,
-                    radius: 2
-                });
-            }
+            for(let i=0; i<30; i++) particles.push({ x: Math.random() * netW, y: Math.random() * netH, vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5, radius: 2 });
         }
-        initNetwork();
-        window.addEventListener('resize', initNetwork);
+        initNetwork(); window.addEventListener('resize', initNetwork);
 
-        netCanvas.addEventListener('mousemove', (e) => {
-            const rect = netCanvas.getBoundingClientRect();
-            mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
-        });
+        netCanvas.addEventListener('mousemove', (e) => { const rect = netCanvas.getBoundingClientRect(); mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top; });
         netCanvas.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
 
         function animateNetwork() {
             nCtx.clearRect(0, 0, netW, netH);
             const color = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#8b5cf6';
-            
             let allNodes = skillNodes.concat(particles);
 
             for (let i = 0; i < allNodes.length; i++) {
-                let node = allNodes[i];
-                node.x += node.vx; node.y += node.vy;
-                
+                let node = allNodes[i]; node.x += node.vx; node.y += node.vy;
                 if(node.originX) { 
                     if(Math.abs(node.x - node.originX) > 30) node.vx *= -1;
                     if(Math.abs(node.y - node.originY) > 30) node.vy *= -1;
@@ -823,33 +809,21 @@
                         nCtx.beginPath(); nCtx.strokeStyle = '#fff'; nCtx.globalAlpha = 1 - (dist/150);
                         nCtx.lineWidth = 1.5; nCtx.moveTo(node.x, node.y); nCtx.lineTo(mouse.x, mouse.y); nCtx.stroke(); nCtx.globalAlpha = 1;
                     }
-                    if(node.originX) { 
-                        node.hovered = dist < 40;
-                    }
+                    if(node.originX) node.hovered = dist < 40;
                 } else {
                     if(node.originX) node.hovered = false;
                 }
-
                 nCtx.beginPath(); nCtx.arc(node.x, node.y, node.hovered ? node.radius * 2 : node.radius, 0, Math.PI * 2);
                 nCtx.fillStyle = node.hovered ? '#fff' : color; nCtx.fill();
             }
 
             skillNodes.forEach(node => {
-                nCtx.font = "bold 16px monospace";
-                nCtx.fillStyle = '#fff';
-                nCtx.fillText(node.title, node.x + 15, node.y + 5);
-                
+                nCtx.font = "bold 16px monospace"; nCtx.fillStyle = '#fff'; nCtx.fillText(node.title, node.x + 15, node.y + 5);
                 if (node.hovered) {
-                    nCtx.font = "14px monospace";
-                    nCtx.fillStyle = color;
-                    nCtx.fillText("> " + node.desc, node.x + 15, node.y + 25);
-                    
-                    nCtx.strokeStyle = color;
-                    nCtx.lineWidth = 1;
-                    nCtx.strokeRect(node.x + 10, node.y - 15, 250, 50);
+                    nCtx.font = "14px monospace"; nCtx.fillStyle = color; nCtx.fillText("> " + node.desc, node.x + 15, node.y + 25);
+                    nCtx.strokeStyle = color; nCtx.lineWidth = 1; nCtx.strokeRect(node.x + 10, node.y - 15, 250, 50);
                 }
             });
-
             requestAnimationFrame(animateNetwork);
         }
         animateNetwork();
@@ -864,31 +838,13 @@
             if (e.key === 'Enter') {
                 const cmd = this.value.trim().toLowerCase();
                 this.value = ''; let response = '';
-
-                if (cmd === 'help') {
-                    response = "Команды:<br> whoami<br> play music<br> rampage<br> ivoxygen<br> clear";
-                } else if (cmd === 'clear') {
-                    termHistory.innerHTML = ''; return;
-                } else if (cmd === 'whoami') {
-                    response = "Evil_bastard // 19 лет, Украина // Студент ХПИ 125.";
-                } else if (cmd === 'play music') {
-                    spotifyWidget.style.display = 'block'; setTimeout(() => { spotifyWidget.style.opacity = '1'; }, 50);
-                    response = "<span style='color:var(--accent)'>[+] Инициализация Spotify...</span>";
-                } else if (cmd === 'rampage') {
-                    document.body.classList.toggle('rampage-mode');
-                    response = document.body.classList.contains('rampage-mode') 
-                        ? "<span style='color:#ff003c; font-weight:bold;'>[!] RAMPAGE MODE ACTIVATED. УГРОЗА ОБНАРУЖЕНА.</span>" 
-                        : "Система стабилизирована.";
-                } else if (cmd === 'ivoxygen') {
-                    response = `<pre style="color:var(--accent); font-size:0.8rem; line-height:1;">
- ___ _  _ _____  ___   _____ ___ _  _ 
-|_ _| || | _ \\ \\/ / \\ / / __| __| \\| |
- | || \\/ |   /\\  / \\ V / (_ | _|| .\` |
-|___|\\__/|_|_\\ \\/   |_| \\___|___|_|\\_|
-[ "I lost my mind in cyberspace" ]</pre>`;
-                } else if (cmd !== '') {
-                    response = `bash: ${cmd}: команда не найдена.`;
-                }
+                if (cmd === 'help') response = "Команды:<br> whoami<br> play music<br> rampage<br> ivoxygen<br> clear";
+                else if (cmd === 'clear') { termHistory.innerHTML = ''; return; }
+                else if (cmd === 'whoami') response = "Evil_bastard // 19 лет, Украина // Студент ХПИ 125.";
+                else if (cmd === 'play music') { spotifyWidget.style.display = 'block'; setTimeout(() => { spotifyWidget.style.opacity = '1'; }, 50); response = "<span style='color:var(--accent)'>[+] Инициализация Spotify...</span>"; }
+                else if (cmd === 'rampage') { document.body.classList.toggle('rampage-mode'); response = document.body.classList.contains('rampage-mode') ? "<span style='color:#ff003c; font-weight:bold;'>[!] RAMPAGE MODE ACTIVATED. УГРОЗА ОБНАРУЖЕНА.</span>" : "Система стабилизирована."; }
+                else if (cmd === 'ivoxygen') response = `<pre style="color:var(--accent); font-size:0.8rem; line-height:1;">\n ___ _  _ _____  ___   _____ ___ _  _ \n|_ _| || | _ \\ \\/ / \\ / / __| __| \\| |\n | || \\/ |   /\\  / \\ V / (_ | _|| .\` |\n|___|\\__/|_|_\\ \\/   |_| \\___|___|_|\\_|\n[ "I lost my mind in cyberspace" ]</pre>`;
+                else if (cmd !== '') response = `bash: ${cmd}: команда не найдена.`;
 
                 if (cmd !== '') {
                     termHistory.innerHTML += `<p><span class="prompt">root@khpi:~#</span> <span class="text">${cmd}</span></p>`;
@@ -915,6 +871,8 @@
 
         const container = document.getElementById('supra-container');
         const placeholder = document.getElementById('placeholder-content');
+        const colorControls = document.getElementById('car-color-controls');
+        const colorPicker = document.getElementById('carColor');
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
@@ -924,33 +882,60 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 1.5;
+        controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 1.5;
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
-        scene.add(ambientLight);
-        
-        const dirLightFront = new THREE.DirectionalLight(0xffffff, 3.0);
-        dirLightFront.position.set(10, 10, 10);
-        scene.add(dirLightFront);
-
-        const dirLightBack = new THREE.DirectionalLight(0xffffff, 2.0);
-        dirLightBack.position.set(-10, 10, -10);
-        scene.add(dirLightBack);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 2.0); scene.add(ambientLight);
+        const dirLightFront = new THREE.DirectionalLight(0xffffff, 3.0); dirLightFront.position.set(10, 10, 10); scene.add(dirLightFront);
+        const dirLightBack = new THREE.DirectionalLight(0xffffff, 2.0); dirLightBack.position.set(-10, 10, -10); scene.add(dirLightBack);
 
         const loader = new GLTFLoader();
-        
+        let carBodyMaterials = []; // Массив для хранения материалов кузова
+
         loader.load(
             'toyota_supra_mk4_a80.glb', 
             function (gltf) {
                 const model = gltf.scene;
                 scene.add(model);
 
+                // --- ЛОГИКА ПОИСКА КУЗОВА ДЛЯ ПОКРАСКИ ---
+                model.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        const mats = Array.isArray(child.material) ? child.material : [child.material];
+                        mats.forEach(mat => {
+                            const name = mat.name.toLowerCase();
+                            // Ищем материалы, похожие на краску кузова
+                            if (name.includes('paint') || name.includes('body') || name.includes('shell') || name.includes('color') || name.includes('exterior')) {
+                                if (!carBodyMaterials.includes(mat)) carBodyMaterials.push(mat);
+                            }
+                        });
+                    }
+                });
+
+                // Если по названию не нашли, ищем самый большой меш (обычно это кузов)
+                if (carBodyMaterials.length === 0) {
+                    let largestMesh = null;
+                    let maxVolume = 0;
+                    model.traverse((child) => {
+                        if (child.isMesh) {
+                            child.geometry.computeBoundingBox();
+                            const box = child.geometry.boundingBox;
+                            const volume = (box.max.x - box.min.x) * (box.max.y - box.min.y) * (box.max.z - box.min.z);
+                            if (volume > maxVolume) {
+                                maxVolume = volume;
+                                largestMesh = child;
+                            }
+                        }
+                    });
+                    if (largestMesh && largestMesh.material) {
+                        const mats = Array.isArray(largestMesh.material) ? largestMesh.material : [largestMesh.material];
+                        carBodyMaterials.push(...mats);
+                    }
+                }
+
+                // Масштабируем и центрируем
                 const box = new THREE.Box3().setFromObject(model);
                 const size = box.getSize(new THREE.Vector3());
                 const center = box.getCenter(new THREE.Vector3());
-
                 const maxDim = Math.max(size.x, size.y, size.z);
                 const scale = 7 / maxDim; 
                 model.scale.set(scale, scale, scale);
@@ -961,6 +946,9 @@
 
                 placeholder.style.display = 'none';
                 container.appendChild(renderer.domElement);
+                
+                // Показываем панель выбора цвета
+                colorControls.style.opacity = '1';
 
                 camera.position.set(5, 3, 7);
                 controls.target.set(0, 0, 0); 
@@ -969,9 +957,17 @@
             undefined, 
             function (error) {
                 console.error('Ошибка загрузки модели:', error);
-                placeholder.innerHTML = `<p style="color: red;">Ошибка загрузки 3D модели. Проверьте консоль.</p>`;
+                placeholder.innerHTML = `<p style="color: red;">Ошибка загрузки 3D модели.</p>`;
             }
         );
+
+        // --- СОБЫТИЕ СМЕНЫ ЦВЕТА ---
+        colorPicker.addEventListener('input', (event) => {
+            const newColor = new THREE.Color(event.target.value);
+            carBodyMaterials.forEach(mat => {
+                mat.color = newColor;
+            });
+        });
 
         function animate() {
             requestAnimationFrame(animate);
