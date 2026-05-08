@@ -199,7 +199,6 @@
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; 
             width: 100%; max-width: 1400px; margin: 0 auto;
         }
-        /* ИСПРАВЛЕНИЕ ЗАВИСАНИЯ: Анимация при наведении добавлена только к главному контейнеру карточки */
         .flip-card { 
             background-color: transparent; min-height: 300px; perspective: 1000px; cursor: pointer; 
             transition: transform 0.3s ease;
@@ -256,7 +255,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            opacity: 0; /* скрыто до загрузки авто */
+            opacity: 0; 
             transition: opacity 0.5s ease;
             box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
         }
@@ -502,12 +501,12 @@
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
                             <h3><i class="fas fa-gamepad" style="color: var(--accent);"></i> Dota 2 & Спорт</h3>
-                            <p>В свободное время переключаюсь на баскетбол или залетаю в катки по Dota 2.</p>
+                            <p>В свободное время переключаюсь на спорт — люблю играть в баскетбол и настольный теннис, ну и, конечно, залетаю в катки по Dota 2.</p>
                             <span class="click-hint">[Нажми меня]</span>
                         </div>
                         <div class="flip-card-back">
                             <h3 style="font-size: 1.5rem;">Подробнее</h3>
-                            <p>В Dota 2 наиграно почти 4.000 часов! Начал подростком, раньше сутками гнался за MMR.</p>
+                            <p>В Dota 2 наиграно почти 4.000 часов! Начал подростком, раньше сутками гнался за MMR. Но физическая активность тоже важна, поэтому регулярно играю в баскетбол и настольный теннис.</p>
                         </div>
                     </div>
                 </div>
@@ -621,6 +620,7 @@
                 <a href="https://github.com/Evileen" target="_blank" class="social-btn"><i class="fab fa-github"></i> GitHub</a>
                 <a href="https://www.instagram.com/ev1l.bastard?igsh=N3BnMG56aHRraTJt&utm_source=qr" target="_blank" class="social-btn"><i class="fab fa-instagram"></i> Instagram</a>
                 <a href="https://www.tiktok.com/@evil.bastard?_r=1&_t=ZS-9654yGq5h1J" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i> TikTok</a>
+                <a href="https://steamcommunity.com/id/твоя_ссылка_на_steam" target="_blank" class="social-btn"><i class="fab fa-steam"></i> Steam</a>
             </div>
         </section>
     </div>
@@ -889,7 +889,7 @@
         const dirLightBack = new THREE.DirectionalLight(0xffffff, 2.0); dirLightBack.position.set(-10, 10, -10); scene.add(dirLightBack);
 
         const loader = new GLTFLoader();
-        let carBodyMaterials = []; // Массив для хранения материалов кузова
+        let carBodyMaterials = []; 
 
         loader.load(
             'toyota_supra_mk4_a80.glb', 
@@ -932,7 +932,6 @@
                     }
                 }
 
-                // Масштабируем и центрируем
                 const box = new THREE.Box3().setFromObject(model);
                 const size = box.getSize(new THREE.Vector3());
                 const center = box.getCenter(new THREE.Vector3());
@@ -947,7 +946,6 @@
                 placeholder.style.display = 'none';
                 container.appendChild(renderer.domElement);
                 
-                // Показываем панель выбора цвета
                 colorControls.style.opacity = '1';
 
                 camera.position.set(5, 3, 7);
