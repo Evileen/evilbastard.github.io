@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Портфолио | Evil_bastard</title>
     
+    <!-- ИКОНКА ДЛЯ ВКЛАДКИ (ФАВИКОН) -->
     <link rel="icon" type="image/png" href="favicon.png">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -410,6 +411,7 @@
 </head>
 <body>
 
+    <!-- ЗАСТАВКА СО СКАНЕРОМ -->
     <div id="preloader">
         <div class="loader-content">
             <i class="fas fa-fingerprint" id="fingerprint-icon"></i>
@@ -420,6 +422,7 @@
         </div>
     </div>
 
+    <!-- ТЕКСТ СКАНИРОВАНИЯ В УГЛУ -->
     <div id="scan-popup">Ожидание...</div>
 
     <div id="spotify-widget">
@@ -497,6 +500,7 @@
             <h2 class="section-title fade-in-section">Интересы и Будущие проекты</h2>
             
             <div class="interests__cards">
+                <!-- Карточка 1 -->
                 <div class="flip-card fade-in-section" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
@@ -511,6 +515,7 @@
                     </div>
                 </div>
 
+                <!-- Карточка 2 -->
                 <div class="flip-card fade-in-section" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
@@ -525,6 +530,7 @@
                     </div>
                 </div>
 
+                <!-- Карточка 3 -->
                 <div class="flip-card fade-in-section" onclick="this.classList.toggle('flipped')">
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
@@ -540,9 +546,11 @@
                 </div>
             </div>
 
+            <!-- БЛОК ДЛЯ 3D ВИЗУАЛИЗАЦИИ И ИНФО О МАШИНЕ -->
             <div class="supra-section fade-in-section">
                 <div class="future-3d-large" id="supra-container">
                     
+                    <!-- ПАНЕЛЬ ВЫБОРА ЦВЕТА МАШИНЫ -->
                     <div class="car-color-panel" id="car-color-controls">
                         <label for="carColor">Color:</label>
                         <input type="color" id="carColor" value="#ffffff" title="Выбрать цвет машины">
@@ -568,10 +576,24 @@
             </div>
         </section>
 
+        <!-- НОВЫЙ РАЗДЕЛ: ВЗГЛЯД СО СТОРОНЫ -->
         <section id="view-from-outside" class="view-from-outside-section fade-in-section">
             <h2 class="section-title">Взгляд со стороны</h2>
             
             <div class="expandable-cards-container">
+                
+                <!-- Плашка 5: Тип личности (Добавлена новой первой плашкой) -->
+                <div class="expand-card fade-in-section">
+                    <div class="expand-card-header">
+                        <h3><i class="fas fa-chess-knight" style="margin-right: 10px;"></i> Тип личности: ENTJ (Командир)</h3>
+                        <span class="toggle-icon"></span>
+                    </div>
+                    <div class="expand-card-body">
+                        <p>«По результатам теста 16Personalities мой тип личности — ENTJ (Командир). Это значит, что я прирожденный стратег, который ценит логику, структуру и эффективность. Я привык видеть общую картину, быстро принимать решения и доводить начатое до конца, не боясь брать на себя ответственность.»</p>
+                    </div>
+                </div>
+
+                <!-- Плашка 1 -->
                 <div class="expand-card fade-in-section">
                     <div class="expand-card-header">
                         <h3><i class="fas fa-brain" style="margin-right: 10px;"></i> Интеллект и стратегия</h3>
@@ -582,6 +604,7 @@
                     </div>
                 </div>
 
+                <!-- Плашка 2 -->
                 <div class="expand-card fade-in-section">
                     <div class="expand-card-header">
                         <h3><i class="fas fa-shield-virus" style="margin-right: 10px;"></i> Характер и выдержка</h3>
@@ -592,6 +615,7 @@
                     </div>
                 </div>
 
+                <!-- Плашка 3 -->
                 <div class="expand-card fade-in-section">
                     <div class="expand-card-header">
                         <h3><i class="fas fa-users" style="margin-right: 10px;"></i> Общение и эмпатия</h3>
@@ -602,6 +626,7 @@
                     </div>
                 </div>
 
+                <!-- Плашка 4 -->
                 <div class="expand-card fade-in-section">
                     <div class="expand-card-header">
                         <h3><i class="fas fa-user-secret" style="margin-right: 10px;"></i> Моя обратная сторона (Особенности)</h3>
@@ -828,7 +853,7 @@
         }
         animateNetwork();
 
-        // ЛОГИКА ТЕРМИНАЛА
+        // ЛОГИКА ТЕРМИНАЛА (ОБНОВЛЕНА КОМАНДА WHOAMI)
         const termInput = document.getElementById('term-input');
         const termHistory = document.getElementById('term-history');
         const termBody = document.getElementById('terminalBody');
@@ -840,7 +865,7 @@
                 this.value = ''; let response = '';
                 if (cmd === 'help') response = "Команды:<br> whoami<br> play music<br> rampage<br> ivoxygen<br> clear";
                 else if (cmd === 'clear') { termHistory.innerHTML = ''; return; }
-                else if (cmd === 'whoami') response = "Evil_bastard // 19 лет, Украина // Студент ХПИ 125.";
+                else if (cmd === 'whoami') response = "Evil_bastard // 19 лет, Украина // Студент ХПИ 125 // Personality: ENTJ (Командир).";
                 else if (cmd === 'play music') { spotifyWidget.style.display = 'block'; setTimeout(() => { spotifyWidget.style.opacity = '1'; }, 50); response = "<span style='color:var(--accent)'>[+] Инициализация Spotify...</span>"; }
                 else if (cmd === 'rampage') { document.body.classList.toggle('rampage-mode'); response = document.body.classList.contains('rampage-mode') ? "<span style='color:#ff003c; font-weight:bold;'>[!] RAMPAGE MODE ACTIVATED. УГРОЗА ОБНАРУЖЕНА.</span>" : "Система стабилизирована."; }
                 else if (cmd === 'ivoxygen') response = `<pre style="color:var(--accent); font-size:0.8rem; line-height:1;">\n ___ _  _ _____  ___   _____ ___ _  _ \n|_ _| || | _ \\ \\/ / \\ / / __| __| \\| |\n | || \\/ |   /\\  / \\ V / (_ | _|| .\` |\n|___|\\__/|_|_\\ \\/   |_| \\___|___|_|\\_|\n[ "I lost my mind in cyberspace" ]</pre>`;
@@ -855,6 +880,7 @@
         });
     </script>
 
+    <!-- ИМПОРТ-КАРТА -->
     <script type="importmap">
       {
         "imports": {
@@ -864,6 +890,7 @@
       }
     </script>
 
+    <!-- ИНТЕГРАЦИЯ THREE.JS И 3D МОДЕЛИ (с выбором цвета) -->
     <script type="module">
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -903,7 +930,6 @@
                         const mats = Array.isArray(child.material) ? child.material : [child.material];
                         mats.forEach(mat => {
                             const name = mat.name.toLowerCase();
-                            // Ищем материалы, похожие на краску кузова
                             if (name.includes('paint') || name.includes('body') || name.includes('shell') || name.includes('color') || name.includes('exterior')) {
                                 if (!carBodyMaterials.includes(mat)) carBodyMaterials.push(mat);
                             }
@@ -911,7 +937,6 @@
                     }
                 });
 
-                // Если по названию не нашли, ищем самый большой меш (обычно это кузов)
                 if (carBodyMaterials.length === 0) {
                     let largestMesh = null;
                     let maxVolume = 0;
@@ -959,7 +984,6 @@
             }
         );
 
-        // --- СОБЫТИЕ СМЕНЫ ЦВЕТА ---
         colorPicker.addEventListener('input', (event) => {
             const newColor = new THREE.Color(event.target.value);
             carBodyMaterials.forEach(mat => {
